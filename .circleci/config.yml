@@ -33,4 +33,5 @@ jobs:
           path: target/surefire-reports
       
       - codecov/upload:
-          file: target/jacoco-reports
+          conf: codecov.yml 
+          file: src/target/jacoco-reports
