@@ -1,4 +1,5 @@
 version: 2.1
+# https://github.com/CircleCI-Public/circleci-demo-workflows/blob/workspace-forwarding/.circleci/config.yml
 # persist_to_workspace issues?
 # https://discuss.circleci.com/t/requesterror-x509-certificate-signed-by-unknown-authority-while-uploading-workspace/27908/2
 # https://support.circleci.com/hc/en-us/articles/360016505753-Resolve-Certificate-Signed-By-Unknown-Authority-error-in-Alpine-images?flash_digest=39b76521a337cecacac0cc10cb28f3747bb5fc6a
@@ -37,10 +38,12 @@ jobs:
             echo "Github target branch: $CIRCLECI_TARGET_BRANCH"
       - checkout
       - run: git merge $CIRCLECI_TARGET_BRANCH
+      - attach_workspace:
+          at: ~/circleci-demo-java-spring
       - persist_to_workspace:
-          root: /root
+          root: .
           paths:
-            - circleci-demo-java-spring
+            - '*'
   build:
     executor: testecutor
     steps:
@@ -72,3 +75,9 @@ workflows:
       - build:
           requires:
             - checkout
+  pr_build:
+    jobs:
+      - pr_checkout
+      - build:
+          requires:
+            - pr_checkout
