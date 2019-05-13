@@ -54,8 +54,6 @@ workflows:
   branch_build:
     jobs:
       - checkout
-      - build
-  pr_build:
-    jobs:
-      - pr_checkout
-      - build
+      - build:
+        requires:
+          - checkout
