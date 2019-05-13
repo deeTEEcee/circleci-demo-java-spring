@@ -1,11 +1,14 @@
 version: 2.1
-
+# persist_to_workspace issues?
+# https://discuss.circleci.com/t/requesterror-x509-certificate-signed-by-unknown-authority-while-uploading-workspace/27908/2
+# https://support.circleci.com/hc/en-us/articles/360016505753-Resolve-Certificate-Signed-By-Unknown-Authority-error-in-Alpine-images?flash_digest=39b76521a337cecacac0cc10cb28f3747bb5fc6a
 executors:
   testecutor:
     docker:
+      # Do not lead with alpine images if using 'persist_to_workspace'
       - image: circleci/openjdk:8-jdk-stretch
       - image: circleci/postgres:9.6.3-alpine
-      - image: nimmis/jq
+      - image: nimmis/jq 
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle_test
@@ -19,7 +22,7 @@ jobs:
     steps:
       - checkout
       - persist_to_workspace:
-          root: /root
+          root: ~/
           paths:
             - circleci-demo-java-spring
   pr_checkout:
