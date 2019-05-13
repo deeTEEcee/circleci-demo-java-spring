@@ -21,6 +21,8 @@ jobs:
     executor: testecutor
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/circleci-demo-java-spring
       - persist_to_workspace:
           root: .
           paths:
@@ -42,6 +44,8 @@ jobs:
   build:
     executor: testecutor
     steps:
+      - attach_workspace:
+          at: ~/circleci-demo-java-spring
       - restore_cache:
           key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
       
