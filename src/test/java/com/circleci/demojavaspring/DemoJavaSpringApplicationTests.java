@@ -9,4 +9,8 @@ public class DemoJavaSpringApplicationTests {
 	public void contextLoads() {
 	}
 
+    @Test
+    public void newTestOne() {
+        
+    }
 }
