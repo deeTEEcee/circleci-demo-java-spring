@@ -4,7 +4,7 @@ version: 2.1
 # https://discuss.circleci.com/t/requesterror-x509-certificate-signed-by-unknown-authority-while-uploading-workspace/27908/2
 # https://support.circleci.com/hc/en-us/articles/360016505753-Resolve-Certificate-Signed-By-Unknown-Authority-error-in-Alpine-images?flash_digest=39b76521a337cecacac0cc10cb28f3747bb5fc6a
 executors:
-  testecutor:
+  default-executor:
     docker:
       # Do not lead with alpine images if using 'persist_to_workspace'
       - image: circleci/openjdk:8-jdk-stretch
@@ -19,7 +19,7 @@ orbs:
   codecov: codecov/codecov@1.0.4
 jobs:
   checkout:
-    executor: testecutor
+    executor: default-executor
     steps:
       - checkout
       - attach_workspace:
@@ -29,7 +29,7 @@ jobs:
           paths:
             - '*'
   pr_checkout:
-    executor: testecutor
+    executor: default-executor
     steps:
       - run:
           name: Get PR target branch.
@@ -46,7 +46,7 @@ jobs:
           paths:
             - '*'
   build:
-    executor: testecutor
+    executor: default-executor
     steps:
       - attach_workspace:
           at: ~/circleci-demo-java-spring
@@ -70,12 +70,12 @@ jobs:
           file: src/target/jacoco-reports
 workflows:
   version: 2
-  # branch_build:
-    # jobs:
-      # - checkout
-      # - build:
-          # requires:
-            # - checkout
+  branch_build:
+    jobs:
+      - checkout
+      - build:
+          requires:
+            - checkout
   pr_build:
     jobs:
       - pr_checkout
