@@ -55,5 +55,5 @@ workflows:
     jobs:
       - checkout
       - build:
-        requires:
-          - checkout
+          requires:
+            - checkout
