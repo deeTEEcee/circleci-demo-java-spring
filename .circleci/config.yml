@@ -3,9 +3,9 @@ version: 2.1
 executors:
   testecutor:
     docker:
-      - image: nimmis/jq
       - image: circleci/openjdk:8-jdk-stretch
       - image: circleci/postgres:9.6.3-alpine
+      - image: nimmis/jq
         environment:
           POSTGRES_USER: root
           POSTGRES_DB: circle_test
