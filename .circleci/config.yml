@@ -24,7 +24,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - '*'
+            - .
   pr_checkout:
     executor: testecutor
     steps:
