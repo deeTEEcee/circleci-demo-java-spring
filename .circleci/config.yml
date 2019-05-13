@@ -37,6 +37,7 @@ jobs:
             CIRCLECI_TARGET_BRANCH=$(curl -s https://api.github.com/repos/deeteecee/circleci-demo-java-spring/pulls/1 | jq --raw-output '.base.ref')
             echo "Github target branch: $CIRCLECI_TARGET_BRANCH"
       - checkout
+      - run: git fetch
       - run: git merge $CIRCLECI_TARGET_BRANCH
       - attach_workspace:
           at: ~/circleci-demo-java-spring
@@ -69,12 +70,12 @@ jobs:
           file: src/target/jacoco-reports
 workflows:
   version: 2
-  branch_build:
-    jobs:
-      - checkout
-      - build:
-          requires:
-            - checkout
+  # branch_build:
+    # jobs:
+      # - checkout
+      # - build:
+          # requires:
+            # - checkout
   pr_build:
     jobs:
       - pr_checkout
