@@ -32,7 +32,8 @@ jobs:
             - run:
                 name: Get PR target branch.
                 command: |
-                  echo "export CIRCLECI_TARGET_BRANCH=$(curl -s https://api.github.com/repos/deeteecee/circleci-demo-java-spring/pulls/1 | jq --raw-output '.base.ref')" >> $BASH_ENV
+                  CIRCLECI_TARGET_BRANCH=$(curl -s https://api.github.com/repos/deeteecee/circleci-demo-java-spring/pulls/1 | jq --raw-output '.base.ref')
+                  echo 'export CIRCLECI_TARGET_BRANCH="${CIRCLECI_TARGET_BRANCH}"' >> $BASH_ENV
                   echo "Github target branch: $CIRCLECI_TARGET_BRANCH"
             # Test the PR merge manually. 
             - run: git fetch origin
