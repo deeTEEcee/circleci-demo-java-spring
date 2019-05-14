@@ -18,30 +18,27 @@ executors:
 orbs:
   codecov: codecov/codecov@1.0.4
 jobs:
-  checkout:
+  checkout-job:
     executor: default-executor
+    parameters:
+      is-merge: # do a prospective merge with master test
+        type: boolean
+        default: false
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/circleci-demo-java-spring
-      - persist_to_workspace:
-          root: .
-          paths:
-            - '*'
-  pr_checkout:
-    executor: default-executor
-    steps:
-      - run:
-          name: Get PR target branch.
-          command: |
-            echo "export CIRCLECI_TARGET_BRANCH=$(curl -s https://api.github.com/repos/deeteecee/circleci-demo-java-spring/pulls/1 | jq --raw-output '.base.ref')" >> $BASH_ENV
-            echo "Github target branch: $CIRCLECI_TARGET_BRANCH"
-      - checkout
-      # Test the PR merge manually. 
-      - run: git fetch origin
-      - run: git merge $CIRCLECI_TARGET_BRANCH
-      - run: git checkout master
-      - run: git merge --no-ff branch
+      - when:
+          condition: << parameters.is-merge >> 
+          steps:
+            - run:
+                name: Get PR target branch.
+                command: |
+                  echo "export CIRCLECI_TARGET_BRANCH=$(curl -s https://api.github.com/repos/deeteecee/circleci-demo-java-spring/pulls/1 | jq --raw-output '.base.ref')" >> $BASH_ENV
+                  echo "Github target branch: $CIRCLECI_TARGET_BRANCH"
+            # Test the PR merge manually. 
+            - run: git fetch origin
+            - run: git merge $CIRCLECI_TARGET_BRANCH
+            - run: git checkout master
+            - run: git merge --no-ff branch
       - attach_workspace:
           at: ~/circleci-demo-java-spring
       - persist_to_workspace:
@@ -73,15 +70,16 @@ jobs:
           file: src/target/jacoco-reports
 workflows:
   version: 2
-  branch_build:
+  test:
     jobs:
-      - checkout
+      - checkout-job
       - build:
           requires:
-            - checkout
-  pr_build:
+            - checkout-job
+  merge-test:
     jobs:
-      - pr_checkout
+      - checkout-job:
+          is-merge: true
       - build:
           requires:
-            - pr_checkout
+            - checkout-job
