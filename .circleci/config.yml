@@ -39,8 +39,6 @@ jobs:
             - run: git merge $CIRCLECI_TARGET_BRANCH
             - run: git checkout master
             - run: git merge --no-ff branch
-      - attach_workspace:
-          at: ~/circleci-demo-java-spring
       - persist_to_workspace:
           root: .
           paths:
